@@ -6,7 +6,7 @@ Simple, free, mass proxy creation via Digital Ocean v2 API
 
 Available for Windows(.exe), Mac(.dmg) or Linux(.deb)
 
-![screen](https://i.imgur.com/ZIabShH.png)
+![screenshot of proxy drip in action](static/assets/Screenshot.png)
 
 [DOWNLOADS CAN BE FOUND HERE](https://github.com/mikelucid/proxydrip/releases)
 

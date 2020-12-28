@@ -373,7 +373,7 @@ function initSettings() {
         center: true,
         fullscreen: false,
         height: 700,
-        icon: `${__dirname}/static/assests/logo.png`,
+        icon: `${__dirname}/static/assets/logo.png`,
         maximizable: false,
         minimizable: false,
         resizable: false,

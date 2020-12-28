@@ -7,7 +7,9 @@ const DEFAULTS = {
     filePath: null,
     do_api_key: null,
     ip_auth: false,
-    ips: null
+    port: '8080',
+    ips: null,
+    ssh: false
 };
 
 // we need to sync every setting that can be modified externally
@@ -19,8 +21,8 @@ function sync() {
 }
 
 function init() {
-  settings.defaults(DEFAULTS);
-  settings.applyDefaultsSync();
+  settings.configure(DEFAULTS);
+  //settings.applyDefaultsSync();
   sync();
 }
 

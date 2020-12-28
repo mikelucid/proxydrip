@@ -1,33 +1,33 @@
-# easy-proxy
-Mass proxy distribution made easy with the DigitalOcean API
+![proxy-drip; simple, free, mass proxy creation via the digital ocean v2 api](static/assets/header_trans.png?raw=true)
+
+# ProxyDrip
+
+Simple, free, mass proxy creation via Digital Ocean v2 API
+
+Available for Windows(.exe), Mac(.dmg) or Linux(.deb)
 
 ![screen](https://i.imgur.com/ZIabShH.png)
 
-[DOWNLOADS CAN BE FOUND HERE](https://github.com/dzt/easy-proxy/releases)
+[DOWNLOADS CAN BE FOUND HERE](https://github.com/mikelucid/proxydrip/releases)
 
-[Community Discord Server](https://discord.gg/BkDxcjT)
+### Setup 
 
-### Setup (for development)
+proxydrip requires [Node.js](http://nodejs.org/).
 
-easy-proxy requires [Node.js](http://nodejs.org/).
+Installation:
 
-Development Setup:
-
-```sh
-$ git clone https://github.com/dzt/easy-proxy.git
-$ cd easy-proxy
+```
+$ apt-get update
+$ apt-get install node && apt-get install npm
+$ git clone https://github.com/mikelucid/proxydrip.git
+$ cd proxydrip
 $ npm install # sudo npm install if you're on macOS
-$ npm run dev
+$ npm start
 ```
 
-# Videos
-[Preview & Explanation Video](https://youtu.be/Uy0EpcAgaAs)
-
-[RSA ID Setup on macOS](https://streamable.com/6gnpe)
-
 ### Who
-
-Written by <a href="http://petersoboyejo.com/">@dzt</a>, made better by you.
+![proxy-drip; logo for proxy-drip. create mass poxies easy on digital ocean. easy as one click. nodejs npm bash ](static/assets/logo.png?raw=true)
+Written by <a href="http://github.com/mikelucid">@mikelucid</a>
 
 
 ## License
@@ -35,7 +35,7 @@ Written by <a href="http://petersoboyejo.com/">@dzt</a>, made better by you.
 ```
 The MIT License (MIT)
 
-Copyright (c) 2017 Peter Soboyejo <http://petersoboyejo.com/>
+Copyright (c) 2020 Mike Lucid <mikelucid@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

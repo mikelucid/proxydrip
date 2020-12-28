@@ -3,13 +3,13 @@ require("copy-paste").global()
 const remote = require('electron').remote
 const app = remote.app
 const $ = require('jquery')
-const ipcRenderer = require('electron').ipcRenderer
+const { ipcRenderer } = require('electron')
 const settings = require('electron-settings')
 const randomstring = require('randomstring')
 
 var settingsValues = app.ep.settings.getAll();
 
-// Fetch for Images as soon as Window is loaded
+/* Fetch for Images as soon as Window is loaded*/
 
 if (settingsValues.do_api_key == null || settingsValues.do_api_key == "") {
     $("#fetching").html('<option value="fetching" id="fetching">Digital Ocean API Key Missing</option>');
@@ -45,7 +45,7 @@ ipcRenderer.on('refreshMain', function(event) {
 });
 
 // Create Proxies Button
-$('#createButton').click(() => {
+$('#createButton').on('click',() => {
 
     if ($("#count").val() == "") {
 
@@ -72,12 +72,6 @@ $('#createButton').click(() => {
 
         for (var i = 0; i < proxyCount; i++) {
 
-            var username = randomstring.generate({
-                length: 6,
-                charset: 'alphabetic',
-                capitalization: 'lowercase'
-            });
-
             var password = randomstring.generate({
                 length: 6,
                 charset: 'alphabetic',
@@ -85,10 +79,12 @@ $('#createButton').click(() => {
             });
 
             tasks.push({
-                username: username,
+                username: 'proxydrip',
                 password: password,
                 slug: $('#sel1').find(":selected").attr('slug'),
-                region: $('#sel1').find(":selected").attr('region')
+                region: $('#sel1').find(":selected").attr('region'),
+                port: settingsValues.port,
+                filename: settingsValues.filename
             })
         }
 
@@ -100,37 +96,37 @@ $('#createButton').click(() => {
 
 ipcRenderer.on('updateMonitor', function(event, data) {
     // TODO: Add Timestamp
-    if ($(`#${data.username}`).length) {
+    if ($(`#${data.password}`).length) {
         // update exisiting item
 
         if (data.error) {
             var newlyAddedUpdate = `
-            <tr id="${data.username}">
+            <tr id="${data.password}">
             <td id="no">#${data.no}</td>
             <td>${data.ip}</td>
-            <td>3128</td>
+            <td>${data.port}</td>
             <td>${data.username}</td>
             <td>${data.password}</td>
-            <td style="color: red;">${data.msg}</td>
+            <td style="color: danger;">${data.msg}</td>
           </tr>`
         } else {
             var newlyAddedUpdate = `
-            <tr id="${data.username}">
+            <tr id="${data.password}">
             <td id="no">#${data.no}</td>
             <td>${data.ip}</td>
-            <td>3128</td>
+            <td>${data.port}</td>
             <td>${data.username}</td>
             <td>${data.password}</td>
-            <td style="color: green;">${data.msg}</td>
+            <td style="color: success;">${data.msg}</td>
           </tr>`
         }
-        $(`#${data.username}`).replaceWith(newlyAddedUpdate);
+        $(`#${data.password}`).replaceWith(newlyAddedUpdate);
     } else {
         var newlyAddedUpdate = `
-      <tr id="${data.username}">
+      <tr id="${data.password}">
         <td id="no">#${data.no}</td>
         <td>${data.ip}</td>
-        <td>3128</td>
+        <td>${data.port}</td>
         <td>${data.username}</td>
         <td>${data.password}</td>
         <td style="color: green;">${data.msg}</td>
@@ -140,20 +136,21 @@ ipcRenderer.on('updateMonitor', function(event, data) {
     }
 });
 
-$('#refresh').click(() => {
+$('#refresh').on('click',() => {
     remote.getCurrentWindow().reload();
 });
 
-$('#copyToClipboardButton').click(() => {
+$('#copyToClipboardButton').on('click',() => {
 
     var content = [];
     $("tr").each(function(i) {
         if (i != 0) {
             if ($(this).has(`td:contains('Created!')`).length) {
                 var ip = $(this).find('td').eq(1).text();
+                var port = $(this).find('td').eq(2).text();
                 var user = $(this).find('td').eq(3).text();
                 var pass = $(this).find('td').eq(4).text();
-                content.push(`${ip}:3128:${user}:${pass}`);
+                content.push(`${ip} ${port} ${user} ${pass}`);
             }
         }
     });
@@ -161,15 +158,15 @@ $('#copyToClipboardButton').click(() => {
     copy(content.join('\n'))
 });
 
-$('#clearLogsButton').click(() => {
+$('#clearLogsButton').on('click',() => {
     $("#results").empty();
 });
 
-$('#cancelTasksButton').click(() => {
+$('#cancelTasksButton').on('click',() => {
     ipcRenderer.send('stopTasks');
 });
 
-$('#settingsButton').click(() => {
+$('#settingsButton').on('click',() => {
     ipcRenderer.send('openSettings');
 });
 

@@ -4,128 +4,96 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
-
-    <link href="../node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
-    <style>
-      body {
-        background-color: white;
-        font-family: BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
-        text-align: center;
-        overflow: hidden;
-        outline: none;
-        font-size: 16px;
-        -webkit-user-select: none;
-      }
-      img {
-        width: 100px;
-        height: 100px;
-      }
-      h1 {
-        font-size: 0.9em;
-        -webkit-user-select: text;
-      }
-      p {
-        font-size: 0.8em;
-        -webkit-user-select: text;
-      }
-      input[type="radio"] {
-        font-size: 0.8em;
-      }
-      input {
-        outline: none;
-      }
-      a {
-        text-decoration: none;
-      }
-
-      .btn-file {
-        position: relative;
-        overflow: hidden;
-      }
-      .btn-file input[type=file] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        font-size: 100px;
-        text-align: right;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        background: red;
-        cursor: inherit;
-        display: block;
-      }
-      input[readonly] {
-        background-color: white !important;
-        cursor: text !important;
-      }
-
-    </style>
+    <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../node_modules/node-waves/dist/waves.min.css" />
+    <link rel="stylesheet" href="main.css">
   </head>
-  <body>
-
-    <hr>
-
-    <img src="./icon.png">
-    <p>
-      Version <script>document.write(require('../package.json').version)</script>
-      (<script>document.write(process.arch === 'x64' ? '64-bit' : '32-bit')</script>)
-      <br><br>
-      Written by <a href="https://github.com/dzt">@dzt</a></a>
-    </p>
-
-    <hr>
-
-    <center>
-
-        <ul class="nav nav-tabs" style="width: 400px;">
-            <li role="presentation" class="active">
-              <a data-toggle="pill" href="#menu1">General</a>
-            </li>
-            <li role="presentation">
-              <a data-toggle="pill" href="#menu2">Forwarding</a>
-            </li>
-          </ul>
-
-      <div class="tab-content">
-        <div id="menu1" class="tab-pane fade in active">
-
-            <h5>Digital Ocean API Key</h5>
-            <input type="text" style="width: 400px;" class="form-control" id="doKey">
-
-            <h5>Authorized IPs</h5>
-            <textarea class="form-control" style="width: 400px;" rows="3" disabled>Coming Soon...</textarea>
-
-            <br>
-
-            <!-- <div class="form-check" style="font-size: 14px;">
-              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-              Enable IP Authorization
-            </div> -->
-
-            <!-- <div class="form-check" style="font-size: 14px;">
-              <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-              Disable User/Pass
-            </div> -->
-
-            <br>
-
-            <button type="submit" class="btn btn-success" id="saveSettings" style="width: 400px; outline: none;">Save</button>
-            <br><br>
-            <button type="submit" class="btn btn-danger" id="destroy" style="width: 400px; outline: none;">Destroy All Droplets</button>
-            <br><br>
-            <button type="submit" class="btn btn-warning" id="reset" style="width: 400px; outline: none;">Reset to Defaults</button>
-
-          </div>
-
-          <div id="menu2" class="tab-pane fade">
-              <h3>Coming Soon...</h3>
-          </div>
-
+  <body class="settings">
+    <div id="bg-pattern" class="bg-pattern waves-effect waves-block waves-light"></div>
+    <div class="main container-fluid">
+      <div class="section">
+        <div class="heading row">
+          <img class="logo" src="./assets/logo.png">
+          <p>ProxyDrip - A Digital Ocean Proxy Faucet<br />
+          Version <script>document.write(require('../package.json').version)</script><br />
+          <script>document.write(process.arch === 'x64' ? '64-bit' : '32-bit')</script></p>
         </div>
+        <div class="body">
+          <div class="section row settings">
+            <ul class="col-sm-12 ml-auto">
+              <h4>How to Use</h4>
+              <li><i class="fa-check fa green"></i>Sign up for a free account on <a href="https://m.do.co/c/f1460a6bef8f" target="_blank">DigitalOcean</a> and then add your API key in the settings,</li>
+              <li><i class="fa-check fa green"></i>Grab your DigitalOcean Token in <a href="https://cloud.digitalocean.com/settings/tokens/new" target="_blank">settings/tokens/new</a> and copy/paste it into the settings page located below.</li>
+              <li><i class="fa-check fa green"></i>(Optional) Dont forget to create <strong>ONE</strong> SSH key and <a href="https://cloud.digitalocean.com/settings/security" target="_blank">add it to your account.</a></li>
+          </ul>
+          </div>
+          <div class="section row">
+            <div class="col-sm-12">
+              <ul class="nav nav-tabs" role="tablist" >
+                <li role="presentation" class="active nav-item nav-link">
+                  <a data-toggle="pill" href="#menu1"><i class="fa fa-cogs"></i> General Settings</a>
+                </li>
+                <!--<li role="presentation">
+                  <a data-toggle="pill" href="#menu2" class="nav-item nav-link"><i class="fa fa-arrow-right"></i> Forwarding</a>
+                </li>-->
+              </ul> 
+              <div class="tab-content">
+                <div id="menu1" class="tab-pane fade show active">
+                  <form class="inline-form">
+                    <div class="form-group row">
+                      <label for="staticEmail" class="col-form-label col-sm-4">Digital Ocean API Key</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="doKey" placeholder="API Key">
+                      </div>
+                    </div>
+                
+                    <div class="form-group row">
+                      <label for="inputPassword" class="col-sm-4 col-form-label">Proxy Server Port</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="port" placeholder="8080" disabled>
+                      </div>
+                    </div>
+                  <!-- 
+                        <div class="form-group row">
+                      <label for="staticEmail" class="col-form-label col-sm-4">Filename to save Proxies List</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="filename" placeholder="proxies.txt">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      
+                      <input type="checkbox" name="settings" id="userAuth" value="userAuth" />
+                      <label class="checkbox" name="settings" class="col-sm-4" for="userAuth">Enable Username/Password </label>
+                    </div>-->
+                      
 
-      </center>
+                      <!--<h5>Authorized IPs</h5>
+                      <textarea class="form-control" style="width: 400px;" rows="3" disabled>Coming Soon...</textarea>
+
+                      <br>-->
+
+                      <!-- <div class="form-check" style="font-size: 14px;">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                        Enable IP Authorization
+                      </div> -->
+
+                      <button type="submit" class="btn aqua-gradient btn-block" id="saveSettings"><i class="fa fa-lock"></i> Save</button>
+                      <button type="submit" class="btn peach-gradient btn-block" id="destroy"><i class="fa fa-fire"></i> Destroy All Droplets</button>
+                  </form>
+                  
+              </div>
+            </div>
+          </div>
+            <div id="menu2" class="tab-pane fade">
+                <h3>Coming Soon...</h3>
+            </div>
+
+          </div>
+          <footer>
+            <p class="copy">Made with <i class="fa fa-heart red"></i> by <a href="https://github.com/mikelucid22">@mikelucid</a</p>
+          </footer>
+        </div>
 
   </body>
   <script>
@@ -134,7 +102,13 @@
         module = undefined;
       }
    </script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script>require('./settings.js')</script>
+   
+  <script type="text/javascript" src="../node_modules/node-waves/dist/waves.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./settings.js"></script>
+  
+  <script type="text/javascript">
+    Waves.attach('.btn', ['waves-button', 'waves-block']);
+    </script>   
 </html>

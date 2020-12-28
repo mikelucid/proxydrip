@@ -2,54 +2,43 @@ const remote = require('electron').remote;
 const app = remote.app;
 const settings = require('electron-settings');
 const $ = require('jquery')
-const Config = require('electron-config');
-const config = new Config();
 const dialog = remote.dialog;
-const ipcRenderer = require('electron').ipcRenderer
+const { ipcRenderer } = require('electron')
 
 var settingsValues = app.ep.settings.getAll();
-var settingsVal = config.get('settingsVal')
 var shell = require('electron').shell;
 
-
-$("#filePathBtn").click(function(event){
-    event.preventDefault();
-    ipcRenderer.send('open-file-dialog');
-});
-
-$('#passphrase').val(settingsValues.ssh_passphrase);
 $('#doKey').val(settingsValues.do_api_key);
-$('#filePath').val(settingsValues.filePath);
-$('#keyName').val(settingsValues.do_ssh_key_name);
+$('#filename').val(settingsValues.filename);
+$('#port').val(settingsValues.port);
+$('#userAuth').val(settingsValues.userAuth);
 
-ipcRenderer.on('selected-file', function(event, filename) {
-    $('#filePath').val(filename);
-    settingsValues.filePath = filename
-    app.ep.settings.set('filePath', filename);
-});
-
-$('#passphrase').change(function() {
-    settingsValues.ssh_passphrase = $(this).val()
-    app.ep.settings.set('ssh_passphrase', $(this).val());
-});
-
-$('#keyName').change(function() {
-    settingsValues.do_ssh_key_name = $(this).val()
-    app.ep.settings.set('do_ssh_key_name', $(this).val());
-});
-
-$('#doKey').change(function() {
+$('#doKey').on('change', function() {
     settingsValues.do_api_key = $(this).val()
     app.ep.settings.set('do_api_key', $(this).val());
 });
 
-$('#saveSettings').click(() => {
-    ipcRenderer.send('refreshMainWindow');
+$('#filename').on('change', function() {
+  settingsValues.filename = $(this).val()
+  app.ep.settings.set('filename', $(this).val());
+});
+$('#port').on('change', function() {
+  settingsValues.port = $(this).val()
+  app.ep.settings.set('port', $(this).val());
+});
+$('#userAuth').on('change', function() {
+  settingsValues.userAuth = $(this).val()
+  app.ep.settings.set('userAuth', $(this).val());
 });
 
-$('#destroy').click(() => {
+$('#saveSettings').on('click', function() {
+    ipcRenderer.send('refreshMainWindow');
+    console.log(app.ep.settings.get('port'))
+});
+
+$('#destroy').on('click', function() {
   $("#destroy").prop("disabled", true);
-  if (settingsValues.do_api_key == null || settingsValues.do_api_ke == "") {
+  if (settingsValues.do_api_key == null || settingsValues.do_api_key == "") {
     $('#destroy').text('No API Key was found');
     setTimeout(function(){
       $('#destroy').text('Destroy');
@@ -61,7 +50,7 @@ $('#destroy').click(() => {
   }
 });
 
-$('#reset').click(() => {
+$('#reset').on('click', function() {
   dialog.showMessageBox({
       "message": `Are you sure you want to reset?`,
       "detail": "You will not be able to recover any task data after you perform this action.",

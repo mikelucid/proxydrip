@@ -1,16 +1,16 @@
-const electron = require('electron')
 const {
     app,
     BrowserWindow,
-    Menu
-} = electron
+    Menu,
+    ipcMain
+} = require('electron')
 const settings = require('./settings-manager')
 const eSettings = require('electron-settings')
 const create = require('./create')
 const path = require('path')
 const async = require('async')
 const ChildProcess = require('child_process')
-var DigitalOcean = require('do-wrapper'),
+var DigitalOcean = require('do-wrapper').default,
     api = null;
 
 var win, settingsWin;
@@ -112,7 +112,11 @@ function init() {
             fullscreenable: false,
             frame: true,
             show: true,
-            icon: `${__dirname}/static/icon.png`
+            icon: `${__dirname}/static/assets/logo.png`,
+            webPreferences: {
+                nodeIntegration: true,
+                enableRemoteModule: true
+              }
         })
         const menuTemplate = [{
                 label: 'File',
@@ -219,12 +223,13 @@ function init() {
         // Set menu template just created as the application menu
         const mainMenu = Menu.buildFromTemplate(menuTemplate)
         Menu.setApplicationMenu(mainMenu)
+        //win.webContents.openDevTools()
         win.setMenu(null);
         win.loadURL(`file://${__dirname}/static/index.html`);
     })
 }
 
-electron.ipcMain.on('create', function(event, args) {
+ipcMain.on('create', function(event, args) {
     var tasks = []
     args.map(function(task, i) {
         tasks.push(function(cb) {
@@ -247,11 +252,11 @@ electron.ipcMain.on('create', function(event, args) {
     });
 });
 
-electron.ipcMain.on('openSettings', function(event, args) {
+ipcMain.on('openSettings', function(event, args) {
     initSettings();
 });
 
-electron.ipcMain.on('open-file-dialog', function(event) {
+ipcMain.on('open-file-dialog', function(event) {
     require('electron').dialog.showOpenDialog({
         properties: ['openFile'],
         filters: [{
@@ -266,7 +271,7 @@ electron.ipcMain.on('open-file-dialog', function(event) {
     })
 });
 
-electron.ipcMain.on('wipeDroplets', function(event) {
+ipcMain.on('wipeDroplets', function(event) {
     api = new DigitalOcean(eSettings.getSync('do_api_key'));
     var droplets = [];
     api.dropletsGetAll({}, function(err, resp, body) {
@@ -278,7 +283,7 @@ electron.ipcMain.on('wipeDroplets', function(event) {
         for (var i = 0; i < body.droplets.length; i++) {
             var id = body.droplets[i].id;
             var dropletName = body.droplets[i].name;
-            if (dropletName.endsWith('-ep')) {
+            if (dropletName.endsWith('-pd')) {
                 api.dropletsDelete(id, function(err, resp, body) {});
             }
         }
@@ -289,17 +294,17 @@ electron.ipcMain.on('wipeDroplets', function(event) {
     });
 });
 
-electron.ipcMain.on('resetApp', (event, args) => {
+ipcMain.on('resetApp', (event, args) => {
     win.close()
     settingsWin.close()
     app.quit();
 })
 
-electron.ipcMain.on('refreshMainWindow', (event, args) => {
+ipcMain.on('refreshMainWindow', (event, args) => {
     win.webContents.send('refreshMain');
 })
 
-electron.ipcMain.on('fetchForImages', function(event) {
+ipcMain.on('fetchForImages', function(event) {
 
     var options = [];
     var regionDict = [];
@@ -322,15 +327,14 @@ electron.ipcMain.on('fetchForImages', function(event) {
             win.webContents.send('initError');
             return
         }
-
-        for (var i = 0; i < body.regions.length; i++) {
+            for (var i = 0; i < body.regions.length; i++) {
             regionDict.push({
                 fullName: body.regions[i].name,
                 slug: body.regions[i].slug
             })
         }
 
-        api.imagesGetAll({}, function(err, resp, body) {
+        api.imagesGetAll({type: 'distribution'}, function(err, resp, body) {
             if (err) {
                 // Return Error to Window
                 win.webContents.send('initError');
@@ -338,14 +342,14 @@ electron.ipcMain.on('fetchForImages', function(event) {
             }
 
             for (var i = 0; i < body.images.length; i++) {
-                // Look for 64bit versions of CentOS 7
-                if (body.images[i].distribution.indexOf('CentOS') > -1) {
-                    if (body.images[i].name.split(' ')[0].startsWith('7')) {
+                // Look for 64bit versions of Debian 10
+                if (body.images[i].distribution.indexOf('Debian') > -1) {
+                    if (body.images[i].name.split(' ')[0].startsWith('10')) {
                         for (var x = 0; x < body.images[i].regions.length; x++) {
 
                             if (fetchFullRegionName(body.images[i].regions[x]) != undefined) {
                                 options.push({
-                                    title: `CentOS ${body.images[i].name} - ${body.images[i].id} - (${fetchFullRegionName(body.images[i].regions[x])})`,
+                                    title: `Debian ${body.images[i].name} - ${body.images[i].id} - (${fetchFullRegionName(body.images[i].regions[x])})`,
                                     region: body.images[i].regions[x],
                                     slug: body.images[i].id
                                 })
@@ -364,12 +368,12 @@ electron.ipcMain.on('fetchForImages', function(event) {
 });
 
 function initSettings() {
-    settingsWin = new electron.BrowserWindow({
+    settingsWin = new BrowserWindow({
         backgroundColor: '#ffffff',
         center: true,
         fullscreen: false,
         height: 700,
-        icon: `${__dirname}/static/icon.png`,
+        icon: `${__dirname}/static/assests/logo.png`,
         maximizable: false,
         minimizable: false,
         resizable: false,
@@ -377,7 +381,11 @@ function initSettings() {
         skipTaskbar: true,
         title: 'Settings',
         useContentSize: true,
-        width: 550
+        width: 650,
+        webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true
+          }
     })
 
     settingsWin.loadURL(`file://${__dirname}/static/settings.html`);

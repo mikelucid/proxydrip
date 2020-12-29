@@ -223,7 +223,7 @@ function init() {
         // Set menu template just created as the application menu
         const mainMenu = Menu.buildFromTemplate(menuTemplate)
         Menu.setApplicationMenu(mainMenu)
-        win.webContents.openDevTools()
+        //win.webContents.openDevTools()
         win.setMenu(null);
         win.loadURL(`file://${__dirname}/static/index.html`);
     })

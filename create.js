@@ -106,7 +106,7 @@ var task = function(win, info, settings, no, callback) {
                       '#!/bin/bash \n' +
                       'sudo apt-get install squid wget apache2-utils -y \n' +
                       `sudo htpasswd -b -c /etc/squid/passwd proxydrip ${info.password} \n` +
-                      'wget -O /etc/squid/squid.conf https://raw.githubusercontent.com/mikelucid15/proxydrip/main/squid.conf --no-check-certificate \n' +
+                      'wget -O /etc/squid/squid.conf https://raw.githubusercontent.com/mikelucid/proxydrip/master/confg/nouserpass/squid.conf --no-check-certificate \n' +
                       'systemctl restart squid.service && systemctl enable squid.service \n' +
                       `iptables -I INPUT -p tcp --dport ${info.port} -j ACCEPT \n` +
                       'iptables-save'

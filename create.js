@@ -202,8 +202,8 @@ var task = function(win, info, settings, no, callback) {
                                 console.log("http://" + info.username + ":" + info.password + "@" + host + ":" + info.port)
 
 
-                                var count = 29;
-                                for (var i = 0; i < 29; i++) {
+                                var count = 59;
+                                for (var i = 0; i < 59; i++) {
 
                                   setTimeout(function() {
                                     sender.send('updateMonitor', {
@@ -256,7 +256,7 @@ var task = function(win, info, settings, no, callback) {
                                     }
                                     request.get(opts, (error, resp, body) => {  
 
-                                            if (err) {
+                                            if (error) {
                                                 console.log(err);
                                                 sender.send('updateMonitor', {
                                                     no: no,
@@ -334,7 +334,7 @@ var task = function(win, info, settings, no, callback) {
                                         });
                         
 
-                                }, 30000);
+                                }, 60000);
 
                             });
 

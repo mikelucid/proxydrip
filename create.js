@@ -113,7 +113,7 @@ var task = function(win, info, settings, no, callback) {
                 };
                 sender.send('updateMonitor', {
                     no: no,
-                    msg: `Creating Droplet...
+                    msg: `Creating Droplet...`,
                     username: info.username,
                     password: info.password,
                     ip: 'n/a',

@@ -3,92 +3,105 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <title>General Settings - ProxyDrip</title>
+    <link href="../node_modules/halfmoon/css/halfmoon-variables.css" rel="stylesheet" />
+
     <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css" rel="stylesheet" type="text/css" />
     <link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../node_modules/node-waves/dist/waves.min.css" />
-    <link rel="stylesheet" href="main.css">
+    <link href="main.css" rel="stylesheet" type="text/css" />
+</head>
   </head>
-  <body class="settings dark-mode">
-    <div id="bg-pattern" class="bg-pattern waves-effect waves-block waves-light"></div>
-    <div class="main container-fluid">
-      <div class="section">
-        <div class="heading row">
-          <img class="logo" src="./assets/logo.png">
-          <p>ProxyDrip - A Digital Ocean Proxy Faucet<br />
-          Version <script>document.write(require('../package.json').version)</script><br />
-          <script>document.write(process.arch === 'x64' ? '64-bit' : '32-bit')</script></p>
-        </div>
-        <div class="body">
-          <div class="section row settings">
-            
-          </div>
-          <div class="section row">
-            <div class="col-sm-12">
-              <ul class="nav nav-tabs" role="tablist" >
-                <li role="presentation" class="active nav-item nav-link">
-                  <a data-toggle="pill" href="#menu1"><i class="fa fa-cogs"></i> General Settings</a>
-                </li>
-                <!--<li role="presentation">
-                  <a data-toggle="pill" href="#menu2" class="nav-item nav-link"><i class="fa fa-arrow-right"></i> Forwarding</a>
-                </li>-->
-              </ul> 
-              <div class="tab-content">
-                <div id="menu1" class="tab-pane fade show active">
-                  <form class="inline-form">
-                    <div class="form-group row">
-                      <label for="staticEmail" class="col-form-label col-sm-4">Digital Ocean API Key</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" id="doKey" placeholder="API Key">
-                      </div>
+  <body class="dark-mode with-custom-webkit-scrollbars with-custom-css-scrollbars" data-dm-shortcut-enabled="true" data-set-preferred-mode-onload="true">
+
+   <!-- Page wrapper start -->
+   <div class="page-wrapper settings">
+
+    <!-- Content wrapper start -->
+    <div class="content-wrapper">
+       <div class=" container-fluid">
+          <!-- Content -->
+          <section class="heading mb-20">
+            <div class="row">
+              <img class="logo" src="./assets/logo.png" />
+              <p>ProxyDrip - A Digital Ocean Proxy Faucet<br />
+              Version <script>document.write(require('../package.json').version)</script><br />
+              <script>document.write(process.arch === 'x64' ? '64-bit' : '32-bit')</script></p>
+            </div>
+          </section>
+          <section id="actions" class="page-content">
+            <h2 class="content-title pl-20">  <i class="fa fa-cogs"></i> General Settings</h2>
+            <div class="card p-0">
+              <div class="content">
+                <form class="inline-form">
+                  <div class="form-group row">
+                    <label for="staticEmail" class="col-form-label col-sm-4">Digital Ocean API Key</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="doKey" placeholder="API Key">
                     </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-4 col-form-label">Proxy Server Port</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="port" placeholder="8080" disabled>
+                    </div>
+                  </div>
+                <!-- 
+                      <div class="form-group row">
+                    <label for="staticEmail" class="col-form-label col-sm-4">Filename to save Proxies List</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="filename" placeholder="proxies.txt">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    
+                    <input type="checkbox" name="settings" id="userAuth" value="userAuth" />
+                    <label class="checkbox" name="settings" class="col-sm-4" for="userAuth">Enable Username/Password </label>
+                  </div>-->
+                    
+
+                    <!--<h5>Authorized IPs</h5>
+                    <textarea class="form-control" style="width: 400px;" rows="3" disabled>Coming Soon...</textarea>
+
+                    <br>-->
+
+                    <!-- <div class="form-check" style="font-size: 14px;">
+                      <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                      Enable IP Authorization
+                    </div> -->
+
+                    <button type="submit" class="btn aqua-gradient btn-block mb-20" id="saveSettings"><i class="fa fa-lock"></i> Save</button>
+                    <button type="submit" class="btn peach-gradient btn-block mb-20" id="destroy"><i class="fa fa-fire"></i> Destroy All Droplets</button>
+                </form>
                 
-                    <div class="form-group row">
-                      <label for="inputPassword" class="col-sm-4 col-form-label">Proxy Server Port</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" id="port" placeholder="8080" disabled>
-                      </div>
-                    </div>
-                  <!-- 
-                        <div class="form-group row">
-                      <label for="staticEmail" class="col-form-label col-sm-4">Filename to save Proxies List</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" id="filename" placeholder="proxies.txt">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      
-                      <input type="checkbox" name="settings" id="userAuth" value="userAuth" />
-                      <label class="checkbox" name="settings" class="col-sm-4" for="userAuth">Enable Username/Password </label>
-                    </div>-->
-                      
-
-                      <!--<h5>Authorized IPs</h5>
-                      <textarea class="form-control" style="width: 400px;" rows="3" disabled>Coming Soon...</textarea>
-
-                      <br>-->
-
-                      <!-- <div class="form-check" style="font-size: 14px;">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        Enable IP Authorization
-                      </div> -->
-
-                      <button type="submit" class="btn aqua-gradient btn-block" id="saveSettings"><i class="fa fa-lock"></i> Save</button>
-                      <button type="submit" class="btn peach-gradient btn-block" id="destroy"><i class="fa fa-fire"></i> Destroy All Droplets</button>
-                  </form>
-                  
-              </div>
             </div>
           </div>
-            <div id="menu2" class="tab-pane fade">
-                <h3>Coming Soon...</h3>
-            </div>
-
-          </div>
-          <footer>
-            <p class="copy">Made with <i class="fa fa-heart red"></i> by <a href="https://github.com/mikelucid22">@mikelucid</a</p>
-          </footer>
         </div>
+
+        <div class="card">
+          <h2 class="card-title">
+            More Options, Coming Soon
+          </h2>
+          <p>In the future we will be introducing features. In the mean time please checkout my github and leave some feedback or checkout my other projects:</p>
+          <h6>Future roadmap:</h6>
+          <ul>
+              <li>Set a custom proxy user and password</li>
+              <li>An editable list of all running proxies</li>
+              <li>Ability to add/remove proxy password</li>
+            </ul>
+          <div class="text-right"> <!-- text-right = text-align: right -->
+            <a href="https://github.com/mikelucid/proxydrip" class="btn"><i class="fab fa-github"></i> Connect on Github</a>
+            <a href="https://github.com/mikelucid/proxydrip/issues/new" class="btn btn-primary"><i class="fa fa-magic"></i> Request a feature</a>
+          </div>
+        </div>
+          <div id="menu2" class="tab-pane fade">
+              <h3>Coming Soon...</h3>
+          </div>
+
+        </div>
+        <footer>
+          <p class="copy">Made with <i class="fa fa-heart red"></i> by <a href="https://github.com/mikelucid22">@mikelucid</a</p>
+        </footer>
+      </div>
 
   </body>
   <script>

@@ -233,7 +233,7 @@ function init() {
             // Set menu template just created as the application menu
             const mainMenu = Menu.buildFromTemplate(menuTemplate)
             Menu.setApplicationMenu(mainMenu)
-            win.webContents.openDevTools()
+            //win.webContents.openDevTools()
             //  halfmoon.onDOMContentLoaded() })
             win.setMenu(null);
 
@@ -413,7 +413,7 @@ function initSettings() {
     settingsWin.loadURL(`file://${__dirname}/static/settings.html`);
     // No menu on the About settingsWindow
     settingsWin.setMenu(null);
-    settingsWin.webContents.openDevTools()
+    //settingsWin.webContents.openDevTools()
     settingsWin.once('ready-to-show', function() {
         settingsWin.show()
     })

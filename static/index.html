@@ -1,103 +1,119 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>ProxyDrip - A Digital Ocean Proxy Faucet</title>
-      <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
-      <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css" rel="stylesheet" type="text/css" />
-      <link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
-      <link rel="stylesheet" type="text/css" href="../node_modules/node-waves/dist/waves.min.css" />
+<head>
+   <!-- Meta tags -->
+   <meta charset="utf-8" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+   <meta name="viewport" content="width=device-width" />
+   <!-- Favicon and title -->
+   <link rel="icon" href="assets/logo.png">
+   <title>ProxyDrip - A Digital Ocean Proxy Faucet</title>
 
-      <link rel="stylesheet" href="main.css">
-   </head>
-   <body class="index">
-      <div id="bg-pattern" class="bg-pattern waves-effect waves-block waves-light"></div>
-      <div class="main container-fluid">
-         <div class="section">
-            <div class="heading row">
-               <div class="col-sm-12 box">
-                  <img class="center" src="assets/header_trans.png" />
+   <link href="../node_modules/halfmoon/css/halfmoon-variables.css" rel="stylesheet" />
+
+   <link href="../node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css" rel="stylesheet" type="text/css" />
+   <link href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+   <link href="main.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="with-custom-webkit-scrollbars with-custom-css-scrollbars dark-mode" data-dm-shortcut-enabled="true" data-set-preferred-mode-onload="true">
+
+   <!-- Page wrapper start -->
+   <div class="page-wrapper">
+
+      <!-- Content wrapper start -->
+      <div class="content-wrapper pb-20">
+         <div class=" container-fluid">
+            <!-- Content -->
+            <section class="content">
+               <div class="header d-flex align-content-center flex-wrap">
+                  <img  class=" align-self-start logo" src="assets/header_trans.png" /> 
                </div>
-               
-            </div>
-            <div class="body">
-               <form class="inline-form">
-                  <div class="form-group row">
-                     <label class="col-form-label col-sm-4">Number of Proxies</label>
-                     <div  class="col-sm-8 number-wrapper">
-                        <input class="form-control" type="number" placeholder="Example: 5" id="count">
+               <h2 class="content-title">How to Use</h2>
+               <ul>
+                  <li>Sign up for a free account on <a href="https://m.do.co/c/f1460a6bef8f" target="_blank">DigitalOcean</a> and then add your API key in the settings.</li>
+                  <li>Dont forget to create <strong>ONE</strong> SSH key and <a href="https://cloud.digitalocean.com/settings/security" target="_blank">add it to your account (Optional).</a></li>
+                  <li>Grab your DigitalOcean Token in <a href="https://cloud.digitalocean.com/settings/tokens/new" target="_blank">settings/tokens/new</a> and copy/paste it into the settings page located below.</li>
+               </ul>
+            </section>
+            <section id="actions" class="page-content">
+               <div class="card p-0">
+                  <div class="content">
+                     <form class="inline-form w-600 mw-full body">
+                        <div class="form-group row">
+                           <label class="col-form-label col-sm-4">Number of Proxies</label>
+                           <div  class="col-sm-8 number-wrapper">
+                              <input class="form-control" type="number" placeholder="Example: 5" id="count">
+                           </div>
+                        </div>
+                        <div class="form-group row">
+                           <label class="col-form-label col-sm-4">Server Image</label>
+                           <div class="col-sm-8">
+                              <select class="form-control" id="sel1" disabled>
+                                 <option value="fetching" id="fetching">Fetching Images...</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="row no-gutters">
+                           <button type="submit" class="btn btn-block btn-lg aqua-gradient" id="createButton"><i class="fas fa-plus"></i> Create</button>  
+                        </div>
+                     </form>
+                     <div class="row align-items-center justify-content-center mt-20">
+                        <div class="btn-group" role="group"  aria-label="App Functions">
+                           <button type="button" id="clearLogsButton" class="btn" aria-label="Center Align"> <i class="fas fa-trash-alt"></i> Clear Logs</button>
+                           <button type="button" id="cancelTasksButton" class="btn" aria-label="Right Align"><i class="fa fa-times"></i> Cancel Task(s)</button>
+                           <button type="button" id="copyToClipboardButton" class="btn" aria-label="Left Align"><i class="fa fa-paste"></i> Copy to Clipboard</button>
+                           <button type="button" id="settingsButton" class="btn" aria-label="Justify"><i class="fa fa-cogs"></i> Settings</button>
+                        </div>
                      </div>
                   </div>
-                  <div class="form-group row">
-                     <label class="col-form-label col-sm-4">Server Image</label>
-                     <div class="col-sm-8">
-                        <select class="custom-select" id="sel1" disabled>
-                           <option value="fetching" id="fetching">Fetching Images...</option>
-                        </select>
-                     </div>
-                  </div>
-                  <div class="row no-gutters">
-                     <button type="submit" class="btn btn-block aqua-gradient" id="createButton"><i class="fas fa-plus"></i> Create</button>  
-                  </div>
-               </form>
-            </div>
-            <div class="section">
-               <div class="row ">
-                  <div class="col-sm-10 offset-sm-1">
-                     <div class="btn-group btn-group-sm" role="group"  aria-label="App Functions">
-                        <button type="button" id="clearLogsButton" class="btn btn-copy-code btn btn-dark btn-sm ripple-surface" aria-label="Center Align"> <i class="fas fa-trash-alt"></i> Clear Logs</button>
-                        <button type="button" id="cancelTasksButton" class="btn btn-copy-code btn btn-dark btn-sm ripple-surface" aria-label="Right Align"><i class="fa fa-times"></i> Cancel Task(s)</button>
-                        <button type="button" id="copyToClipboardButton" class="btn btn-copy-code btn btn-dark btn-sm ripple-surface" aria-label="Left Align"><i class="fa fa-paste"></i> Copy to Clipboard</button>
-                        <button type="button" id="settingsButton" class="btn btn-copy-code btn btn-dark btn-sm ripple-surface" aria-label="Justify"><i class="fa fa-cogs"></i> Settings</button>
+                  <div class="lower-content mb-4">
+                     <div class="col-12">
+                        <h2 class="content-title">Your proxies</h2>
+                        <table class="table table-hover table-striped">
+                           <thead>
+                              <tr>
+                                 <th>#</th>
+                                 <th>IP/Host</th>
+                                 <th>Port</th>
+                                 <th>Username</th>
+                                 <th>Password</th>
+                                 <th>Status</th>
+                              </tr>
+                           </thead>
+                           <tbody id="results">
+                              <tr>
+                                 <td>1</td>
+                                 <td>108.20.181.185</td>
+                                 <td>3128</td>
+                                 <td>Z2IoAD0Wec</td>
+                                 <td>5095131428</td>
+                                 <td style="color:#a6e22e">Creating...</td>
+                              </tr>
+                           </tbody>
+                        </table>
                      </div>
                   </div>
                </div>
             </div>
-            <div class="section">
-               <div class="row no-gutters justify-content-sm-center">
-                  <div class="col-sm-12 mb4">
-                     <table class="table table-dark table-hover table-striped">
-                        <thead>
-                           <tr>
-                              <th>#</th>
-                              <th>IP/Host</th>
-                              <th>Port</th>
-                              <th>Username</th>
-                              <th>Password</th>
-                              <th>Status</th>
-                           </tr>
-                        </thead>
-                        <tbody id="results">
-                        <!-- <tr>
-                              <td>1</td>
-                              <td>108.20.181.185</td>
-                              <td>3128</td>
-                              <td>Z2IoAD0Wec</td>
-                              <td>5095131428</td>
-                              <td style="color:#a6e22e">Creating Instance</td>
-                              </tr> -->
-                        </tbody>
-                     </table>
-                  </div>
-               </div>
-            </div>
-            </div>
-         <footer>
-            <div class="status">
-               <a class="fa fa-sync" id="refresh" style="text-decoration: none; cursor: pointer;"></a>&nbsp;&nbsp; Refresh
-            </div>
-            <span class="copy">
-               Made with <i class="fa fa-heart red"></i> by <a href="https://github.com/mikelucid22">@mikelucid</a>
-            </span>
-         </footer>
+         </section>
       </div>
-       
-      <script type="text/javascript" src="app.js"></script>
-      <script type="text/javascript" src="renderer.js"></script>
-      <script type="text/javascript" src="../node_modules/node-waves/dist/waves.min.js"></script>
-      <script type="text/javascript">
-         Waves.attach('.btn', ['waves-button', 'waves-block']);
-      </script>  
-   </body>
+      <!-- Content    wrapper end -->
+      <footer>
+         <div class="status">
+            <a class="fa fa-sync" id="refresh" style="text-decoration: none; cursor: pointer;"></a>&nbsp;&nbsp; Refresh
+         </div>
+         <span class="update">
+            Made with <i class="fa fa-heart red"></i> by<a href="https://github.com/mikelucid22">@mikelucid</a>
+         </span>
+      </footer>
+
+   </div>
+   <!-- Page wrapper end -->
+
+   <!-- External JS -->
+   <script src="https://cdn.jsdelivr.net/npm/halfmoon@1.1.1/js/halfmoon.min.js"></script>
+   <script type="text/javascript" src="app.js"></script>
+   <script type="text/javascript" src="../node_modules/node-waves/dist/waves.min.js"></script>
+</body>
 </html>

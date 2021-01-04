@@ -198,8 +198,8 @@ var task = function(win, info, settings, no, callback) {
                                     wait:false
                                 })
                             }
-
-                                console.log("http://" + info.username + ":" + info.password + "@" + host + ":" + info.port)
+                                var pport = info.port
+                                console.log("http://" + info.username + ":" + info.password + "@" + host + ":" + pport)
 
 
                                 var count = 59;
@@ -229,7 +229,7 @@ var task = function(win, info, settings, no, callback) {
                                                 error: false
                                             });
                                             notifier.notify({
-                                                message: "Building Proxy Server... \nTesting the proxy...\nhttp://" + info.username + ":" + info.password + "@" + host + ":" + info.port,
+                                                message: `${info.port} - Testing the proxy...\nhttp://${info.username}:${info.password}@${host}:${info.port}}`,
                                                 title: `[${no}] Testing in Progress`,
                                                 sound: true,
                                                 icon :`${__dirname}/logo.png`,
@@ -243,12 +243,12 @@ var task = function(win, info, settings, no, callback) {
 
 
                                 setTimeout(function() {
-                                    var auth = info.username+":"+info.password;
-                                    console.log(host,+" "+info.port+" "+auth)
+                                    var auth = `${info.username}:${info.password}`;
+                                    console.log(host,+" "+pport+" "+auth);
                                     var opts = {
                                         host: host,
                                         port: info.port,
-                                        path: "http://www.google.com",
+                                        path: "https://www.google.com",
                                         auth: auth,
                                         headers: {
                                              Host: "www.google.com"

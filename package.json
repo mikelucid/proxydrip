@@ -1,14 +1,14 @@
 {
   "name": "proxydrip",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Free Proxy Creation using Digital Ocean API v2",
   "main": "index.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron-forge start",
     "dev": "electron . --debug",
-    "dist:win": "build --windows --x64 --dir",
-    "dist:mac": "build --mac",
-    "installer": "node scripts/installer.js"
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "release": "build "
   },
   "author": "Mike Lucid <mikelucid@gmail.com>",
   "license": "MIT",
@@ -27,45 +27,107 @@
     "copy-paste": "^1.3.0",
     "curl": "^0.1.4",
     "do-wrapper": "^3.25.4",
-    "electron": "^11.1.1",
+    "electron-is-dev": "^1.2.0",
     "electron-reload": "^1.5.0",
     "electron-settings": "^4.0.2",
+    "electron-squirrel-startup": "^1.0.0",
     "halfmoon": "^1.1.1",
-    "http": "0.0.1-security",
     "http-proxy": "^1.18.1",
     "jquery": "^3.5.1",
     "node-notifier": "^9.0.0",
-    "node-waves": "^0.7.6",
     "object-path": "^0.11.4",
     "path": "^0.12.7",
     "process": "^0.11.10",
     "prompt": "^1.1.0",
     "randomstring": "^1.1.5",
-    "remote-exec": "0.0.3",
     "request": "^2.83.0",
-    "rimraf": "^2.5.4",
-    "underscore": "^1.8.3"
+    "update-electron-app": "^2.0.1",
+    "webpack": "^5.11.1"
   },
   "devDependencies": {
-    "electron-builder": "^22.9.1",
-    "electron-winstaller": "^4.0.1"
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "electron": "^11.1.1",
+    "electron-installer-zip": "^0.1.2",
+    "lint": "^0.7.0",
+    "rpm": "0.0.0",
+    "rpmbuild": "0.0.23"
   },
   "build": {
     "productName": "ProxyDrip",
     "appId": "com.mikelucid.proxyddrip",
     "mac": {
       "target": "default",
-      "icon": "static/icons/logo.icns",
-      "identity": null
+      "icon": "./build/icons/logo.icns",
+      "identity": null,
+      "publish": "github"
     },
     "win": {
       "publisherName": "ProxyDrip",
-      "target": "squirrel",
-      "icon": "static/icons/logo.ico"
+      "target": "nsis",
+      "icon": "./build/icons/logo.ico",
+      "publish": "github"
+    },
+    "linux": {
+      "target": "deb",
+      "executableName": "proxydrip",
+      "icon": "./build/icons/logo.png",
+      "synopsis": "Free Proxy Creation using Digital Ocean API v2",
+      "publish": "github"
     }
   },
   "homepage": "https://github.com/mikelucid/proxydrip#readme",
   "keywords": [
     "proxy"
-  ]
-}
+  ],
+  "config": {
+    "forge": {
+        "name": "@electron-forge/publisher-github",
+        "config": {
+          "repos Pitory": {
+            "owner": "mikelucid",
+            "name": "proxydrip"
+          },
+          "prerelease": true
+        }
+      },
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "ProxyDrip"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "maintainer": "Mike Lucid",
+            "homepage": "https://github.com/mikelucid/"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {
+            "maintainer": "Mike Lucid",
+            "homepage": "https://github.com/mikelucid/"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config": {
+            "background": "./build/background.png",
+            "background-color": "#00a1cb",
+            "format": "ULFO",
+            "category": "public.app-category.productivity",
+            "platforms": [
+              "darwin"
+            ]
+          }
+        }
+      ]
+    }
+  }

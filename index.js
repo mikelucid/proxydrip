@@ -1,3 +1,4 @@
+if(require('electron-squirrel-startup')) return;
 const {
     app,
     BrowserWindow,
@@ -6,6 +7,7 @@ const {
 } = require('electron')
 const settings = require('./settings-manager')
 const eSettings = require('electron-settings')
+const electronInstaller = require('electron-winstaller')
 const create = require('./create')
 const path = require('path')
 const async = require('async')
@@ -17,7 +19,21 @@ var DigitalOcean = require('do-wrapper').default,
 var win, settingsWin;
 
 const debug = /--debug/.test(process.argv[2])
+//auo updating
+require('update-electron-app')()
+var zip = require('electron-installer-zip');
 
+var opts = {
+  dir: './out/',
+  out: './out/'
+};
+
+zip(opts, function(err, res) {
+  if (err) {    
+    process.exit(1);
+  }
+  console.log('Zip file written to: ', res);
+});
 //Auto reload
 require('electron-reload')(__dirname, {
     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
@@ -113,9 +129,9 @@ function init() {
 
             win = new BrowserWindow({
                 width: 750,
-                height: 670,
+                height: 800,
                 minWidth: 750,
-                minHeight: 670,
+                minHeight: 800,
                 resizable: true,
                 maxWidth: 750,
                 maxHeight: 640,
@@ -238,18 +254,16 @@ function init() {
             win.setMenu(null);
 
             win.webContents.once('dom-ready', () => {
-                console.log('main loaded')
-            win.show()
-                loading.hide()
-                loading.close()
+                console.log('main loaded') 
+                win.show()
+                    loading.hide()
+                    loading.close()
             })
             // long loading html
-           setTimeout(() => win.loadURL(`file://${__dirname}/static/index.html`), 3000);
+           setTimeout(() => win.loadURL(`file://${__dirname}/static/index.html`), 2600);
         })
         loading.loadURL(`file://${__dirname}/static/loading.html`)
         loading.show()
-    
-
         ipcMain.on('create', function(event, args) {
             var tasks = []
             args.map(function(task, i) {

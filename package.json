@@ -7,8 +7,8 @@
     "start": "electron-forge start",
     "dev": "electron . --debug",
     "package": "electron-forge package",
-    "make": "electron-forge make",
-    "release": "build "
+    "make": "electron-forge make --platform=darwin && electron-forge make --platform=win32 && electron-forge make --platform=linux",
+    "release": "electron-forge make || electron-forge publish"
   },
   "author": "Mike Lucid <mikelucid@gmail.com>",
   "license": "MIT",
@@ -20,14 +20,15 @@
     "url": "https://github.com/mikelucid/proxydrip/issues"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
+    "@fortawesome/fontawesome-free": "^5.15.2",
     "async": "^3.2.0",
-    "bootstrap": "^4.5.3",
+    "bootstrap": "^4.6.0",
     "console.table": "^0.10.0",
     "copy-paste": "^1.3.0",
     "curl": "^0.1.4",
     "do-wrapper": "^3.25.4",
     "electron-is-dev": "^1.2.0",
+    "electron-osx-sign": "^0.5.0",
     "electron-reload": "^1.5.0",
     "electron-settings": "^4.0.2",
     "electron-squirrel-startup": "^1.0.0",
@@ -42,7 +43,7 @@
     "randomstring": "^1.1.5",
     "request": "^2.83.0",
     "update-electron-app": "^2.0.1",
-    "webpack": "^5.11.1"
+    "webpack": "^5.17.0"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
@@ -50,11 +51,12 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
-    "electron": "^11.1.1",
+    "electron": "^11.2.1",
     "electron-installer-zip": "^0.1.2",
     "lint": "^0.7.0",
     "rpm": "0.0.0",
-    "rpmbuild": "0.0.23"
+    "rpmbuild": "0.0.23",
+    "underscore": "^1.12.0"
   },
   "build": {
     "productName": "ProxyDrip",
@@ -85,49 +87,88 @@
   ],
   "config": {
     "forge": {
-        "name": "@electron-forge/publisher-github",
-        "config": {
-          "repos Pitory": {
-            "owner": "mikelucid",
-            "name": "proxydrip"
-          },
-          "prerelease": true
-        }
+      "electronPackagerConfig": {
+        "dir": ".",
+        "packageManager": "npm",
+        "asar": true,
+        "quiet": true,
+        "appCopyright": "Copyright (C) 2020 Mike Lucid",
+        "icon": "build/icons/logo.png"
       },
-      "packagerConfig": {},
+      "electronWinstallerConfig": {
+        "name": "e-Okul_Toplu_Resim_Duzenleyicisi",
+        "loadingGif": "./build/icons/logo.png"
+      },
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "ProxyDrip"
+            "name": "proxydrip"
           }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {
-            "maintainer": "Mike Lucid",
-            "homepage": "https://github.com/mikelucid/"
-          }
+          "config": {}
         },
         {
           "name": "@electron-forge/maker-rpm",
-          "config": {
-            "maintainer": "Mike Lucid",
-            "homepage": "https://github.com/mikelucid/"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-dmg",
-          "config": {
-            "background": "./build/background.png",
-            "background-color": "#00a1cb",
-            "format": "ULFO",
-            "category": "public.app-category.productivity",
-            "platforms": [
-              "darwin"
-            ]
-          }
+          "config": {}
         }
-      ]
-    }
+      ],
+      "publishers": []
+    },
+    "packagerConfig": {},
+    "makers": [
+      {
+        "name": "@electron-forge/maker-squirrel",
+        "config": {
+          "name": "ProxyDrip"
+        }
+      },
+      {
+        "name": "@electron-forge/maker-deb",
+        "config": {
+          "maintainer": "Mike Lucid",
+          "homepage": "https://github.com/mikelucid/"
+        }
+      },
+      {
+        "name": "@electron-forge/maker-rpm",
+        "config": {
+          "maintainer": "Mike Lucid",
+          "homepage": "https://github.com/mikelucid/"
+        }
+      },
+      {
+        "name": "@electron-forge/maker-dmg",
+        "config": {
+          "background": "./build/background.png",
+          "background-color": "#00a1cb",
+          "format": "ULFO",
+          "category": "public.app-category.productivity",
+          "platforms": [
+            "darwin"
+          ]
+        }
+      }
+    ]
   }
+}

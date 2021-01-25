@@ -1,0 +1,3 @@
+[submodule "proxydrip_upgraded"]
+	path = proxydrip_upgraded
+	url = https://github.com/jd20/easy-proxy.git

@@ -138,7 +138,7 @@ ipcRenderer.on('updateMonitor', function(event, data) {
 
 $('#refresh').on('click',() => {
     remote.getCurrentWindow().reload();
-});
+});    $("#createButton").prop("disabled", false);
 
 $('#copyToClipboardButton').on('click',() => {
 
@@ -164,12 +164,17 @@ $('#clearLogsButton').on('click',() => {
 
 $('#cancelTasksButton').on('click',() => {
     ipcRenderer.send('stopTasks');
+    $("#createButton").prop("disabled", false);
+    $("#clearLogsButton").prop("disabled", false);
+    $("#sel1").prop("disabled", false);
+    $("#createButton").text('Create');
+    $("#count").prop("disabled", false);
 });
 
 $('#settingsButton').on('click',() => {
     ipcRenderer.send('openSettings');
 });
-
+$("#createButton").prop("disabled", false);
 // When all tasks are done doing there thing bring everything back to normal and purge old stuff
 
 ipcRenderer.on('tasksEnded', function(event, data) {

@@ -3,6 +3,7 @@ const {
     app,
     BrowserWindow,
     Menu,
+    Tray,
     ipcMain
 } = require('electron')
 const settings = require('./settings-manager')
@@ -12,6 +13,7 @@ const create = require('./create')
 const path = require('path')
 const async = require('async')
 const ChildProcess = require('child_process')
+const platform = require('os').platform()
 //const halfmoon = require("halfmoon")
 var DigitalOcean = require('do-wrapper').default,
     api = null;
@@ -27,7 +29,6 @@ var opts = {
   dir: './out/',
   out: './out/'
 };
-
 zip(opts, function(err, res) {
   if (err) {    
     process.exit(1);
@@ -125,6 +126,25 @@ function init() {
                 settings
             }
 
+
+        // Create RightClick context menu for tray icon
+        // with two items - 'Restore app' and 'Quit app'
+        const contextMenu = Menu.buildFromTemplate([
+            
+            {
+            label: 'Restore app',
+            click: () => {
+                win.show()
+            }
+            },
+            {
+            label: 'Quit app',
+            click: () => {
+                win.close()
+            }
+            }
+        ])
+
         loading.once('show', () => {
 
             win = new BrowserWindow({
@@ -145,79 +165,66 @@ function init() {
                 }
             })
             const menuTemplate = [{
-                    label: 'File',
-                    submenu: [{
-                            label: 'Settings',
-                            click() {
-                                initSettings()
-                            },
-                            accelerator: 'CmdOrCtrl+,',
+                label: 'File',
+                submenu:
+                [
+                    {
+                        label: 'Settings',
+                        click() {
+                            initSettings()
                         },
-                        {
-                            label: 'Quit',
-                            click() {
-                                app.quit()
-                            },
-                            accelerator: 'CmdOrCtrl+Q',
-                        }
-                    ]
+                        accelerator: 'CmdOrCtrl+,',
+                    },
+                    {
+                        label: 'Quit',
+                        click() {
+                            app.quit()
+                        },
+                        accelerator: 'CmdOrCtrl+Q',
+                    }
+                ]
+            },
+            {
+                label: 'Edit',
+                submenu: [
+                {role: 'undo'}, // Native electron features
+                {role: 'redo'}, // Native electron features
+                {role: 'cut'}, // Native electron features
+                {role: 'copy'}, // Native electron features
+                {role: 'paste'}, // Native electron features
+                {role: 'delete'} // Native electron features
+                ]
+            },
+            {
+                label: 'View',
+                submenu: [
+                {role: 'reload'}, // Native electron features
+                {role: 'forcereload'}, // Native electron features
+                {role: 'resetzoom'}, // Native electron features
+                {role: 'zoomin'}, // Native electron features
+                {role: 'zoomout'} // Native electron features
+                ]
+            },
+            {
+                role: 'window',
+                submenu: [
+                {role: 'minimize'}, // Native electron features
+                {role: 'close'} // Native electron features
+                ]
+            },
+            {
+                role: 'help',
+                submenu: [
+                {
+                    label: 'Documentation',
+                    click: () => {require('electron').shell.openExternal('https://github.com/mikelucid/proxydrip')} // Opens a URL in a new window
                 },
                 {
-                    label: 'Edit',
-                    submenu: [{
-                            role: 'copy'
-                        },
-                        {
-                            role: 'paste'
-                        },
-                        {
-                            role: 'pasteandmatchstyle'
-                        },
-                        {
-                            role: 'delete'
-                        },
-                        {
-                            role: 'selectall'
-                        }
-                    ]
-                },
-                {
-                    label: 'View',
-                    submenu: [{
-                        label: 'Reload',
-                        accelerator: 'CmdOrCtrl+R',
-                        click(item, focusedWindow) {
-                            if (focusedWindow) focusedWindow.reload()
-                        }
-                    }]
-                },
-                {
-                    role: 'window',
-                    submenu: [{
-                            role: 'minimize'
-                        },
-                        {
-                            role: 'close'
-                        }
-                    ]
-                },
-                {
-                    role: 'help',
-                    submenu: [{
-                            label: 'Learn More about EasyProxy',
-                            click() {
-                                require('electron').shell.openExternal('github.com/dzt/easy-proxy')
-                            }
-                        },
-                        {
-                            label: 'Toggle Developer Tools',
-                            accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-                            click(item, focusedWindow) {
-                                if (focusedWindow) focusedWindow.webContents.toggleDevTools()
-                            }
-                        }
-                    ]
+                    label: 'Issues',
+                    click: () => {require('electron').shell.openExternal('https://github.com/mikelucid/proxydrip/issues')} // Opens a URL in a new window
                 }
+                ]
+            }
             ]
 
             // If the platform is Mac OS, make some changes to the window management portion of the menu
@@ -261,7 +268,7 @@ function init() {
             })
             // long loading html
            setTimeout(() => win.loadURL(`file://${__dirname}/static/index.html`), 2600);
-        })
+        })  
         loading.loadURL(`file://${__dirname}/static/loading.html`)
         loading.show()
         ipcMain.on('create', function(event, args) {

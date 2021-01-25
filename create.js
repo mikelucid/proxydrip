@@ -196,13 +196,13 @@ var task = function(win, info, settings, no, callback) {
                                     sound: true,//"Bottle",
                                     icon :`${__dirname}/logo.png`,
                                     wait:false
-                                })
+                                   })
                             }
                                 var pport = info.port
                                 console.log("http://" + info.username + ":" + info.password + "@" + host + ":" + pport)
 
 
-                                var count = 59;
+                                var count = 89;
                                 for (var i = 0; i < 59; i++) {
 
                                   setTimeout(function() {
@@ -243,24 +243,53 @@ var task = function(win, info, settings, no, callback) {
 
 
                                 setTimeout(function() {
-                                    var auth = `${info.username}:${info.password}`;
-                                    console.log(host,+" "+pport+" "+auth);
-                                    var opts = {
-                                        host: host,
-                                        port: info.port,
-                                        path: "https://www.google.com",
-                                        auth: auth,
+                                    console.log(`http://${info.username}:${info.password}@${host}:${info.port}}`);
+                                    request({
+                                        method: 'get',
+                                        url: 'https://google.com/',
+                                        proxy: "http://" + info.username + ":" + info.password + "@" + host + ":" + '8080',
+                                        gzip: true,
                                         headers: {
-                                             Host: "www.google.com"
-                                          }
-                                    }
-                                    request.get(opts, (error, resp, body) => {  
+                                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3107.4 Safari/537.36'
+                                        }
+                                    }, (error, resp, body) => {
 
-                                            if (error) {
-                                                console.log(err);
+                                        if (error) {
+                                            console.log(err);
+                                            sender.send('updateMonitor', {
+                                                no: no,
+                                                msg: `Proxy Invalid, destroying droplet.`,
+                                                username: info.username,
+                                                password: info.password,
+                                                ip: host,
+                                                port: info.port,
+                                                error: true
+                                            });
+                                            notifier.notify({
+                                                message: "Proxy Invalid, destroying droplet.",
+                                                title: err,
+                                                sound: true,//"Bottle",
+                                                icon : `${__dirname}/logo.png`,
+                                                wait:false
+                                            })
+
+                                            destroyDroplet(id, api, function(err, resp) {
+                                                if (err) {
+                                                    sender.send('updateMonitor', {
+                                                        no: no,
+                                                        msg: `Error Occured while destroying droplet due to bad proxy Connection.`,
+                                                        username: info.username,
+                                                        password: info.password,
+                                                        ip: host,
+                                                        port: info.port,
+                                                        error: true
+                                                    });
+                                                    return callback(null, true);
+                                                }
+
                                                 sender.send('updateMonitor', {
                                                     no: no,
-                                                    msg: `Proxy Invalid, destroying droplet.`,
+                                                    msg: `Droplet Destroyed due to bad proxy connection.`,
                                                     username: info.username,
                                                     password: info.password,
                                                     ip: host,
@@ -268,82 +297,51 @@ var task = function(win, info, settings, no, callback) {
                                                     error: true
                                                 });
                                                 notifier.notify({
-                                                    message: "Proxy Invalid, destroying droplet.",
-                                                    title: err,
-                                                    sound: true,//"Bottle",
-                                                    icon : `${__dirname}/logo.png`,
-                                                    wait:false
-                                                })
-
-                                                destroyDroplet(id, api, function(err, resp) {
-                                                    if (err) {
-                                                        sender.send('updateMonitor', {
-                                                            no: no,
-                                                            msg: `Error Occured while destroying droplet due to bad proxy Connection.`,
-                                                            username: info.username,
-                                                            password: info.password,
-                                                            ip: host,
-                                                            port: info.port,
-                                                            error: true
-                                                        });
-                                                        return callback(null, true);
-                                                    }
-
-                                                    sender.send('updateMonitor', {
-                                                        no: no,
-                                                        msg: `Droplet Destroyed due to bad proxy connection.`,
-                                                        username: info.username,
-                                                        password: info.password,
-                                                        ip: host,
-                                                        port: info.port,
-                                                        error: true
-                                                    });
-                                                    notifier.notify({
-                                                        message: "Droplet Destroyed due to bad proxy connection, during final test.",
-                                                        title: `[${no}] Droplet Destoryed`,
-                                                        sound: true,//"Bottle",
-                                                        icon :`${__dirname}/logo.png`,
-                                                        wait:false
-                                                    })
-
-                                                    return callback(null, true);
-
-                                                });
-
-                                            } else {
-                                                sender.send('updateMonitor', {
-                                                    no: no,
-                                                    msg: `Created!`,
-                                                    username: info.username,
-                                                    password: info.password,
-                                                    port: info.port,
-                                                    ip: host,
-                                                    error: false
-                                                });
-                                                notifier.notify({
-                                                    message: "Dropley ceated, proxy tested and is ready for use!",
-                                                    title: `[${no}] Proxy Created!`,
+                                                    message: "Droplet Destroyed due to bad proxy connection, during final test.",
+                                                    title: `[${no}] Droplet Destoryed`,
                                                     sound: true,//"Bottle",
                                                     icon :`${__dirname}/logo.png`,
                                                     wait:false
                                                 })
 
                                                 return callback(null, true);
-                                            }
 
-                                        });
+                                            });
+
+                                        } else {
+                                            sender.send('updateMonitor', {
+                                                no: no,
+                                                msg: `Created!`,
+                                                username: info.username,
+                                                password: info.password,
+                                                port: info.port,
+                                                ip: host,
+                                                error: false
+                                            });
+                                            notifier.notify({
+                                                message: "Dropley ceated, proxy tested and is ready for use!",
+                                                title: `[${no}] Proxy Created!`,
+                                                sound: true,//"Bottle",
+                                                icon :`${__dirname}/logo.png`,
+                                                wait:false
+                                            })
+
+                                            return callback(null, true);
+                                        }
+
+                                    });
                         
 
-                                }, 60000);
+                                }, 120000);
 
                             });
 
 
-                        }, 5000);
+                        }, 15000);
                     
                 });
 
-            }, 5000);
+            }, 10000);
 
         });
         

@@ -120,7 +120,6 @@ var task = function(win, info, settings, no, callback) {
                     error: false
                 });
 
-
                 console.log(dropletData);
 
                 api.dropletsCreate(dropletData, function(err, resp, body) {
@@ -236,9 +235,8 @@ var task = function(win, info, settings, no, callback) {
                                                 wait:false
                                             })
                                         })
-                                    } 
+                                    }   
                                   }, 1000*i);
-
                                 }
 
 
